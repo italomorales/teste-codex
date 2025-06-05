@@ -1,3 +1,7 @@
+using HelloApi.Application;
+using HelloApi.Domain.Interfaces;
+using HelloApi.Endpoints;
+using HelloApi.Infrastructure.Repositories;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +23,8 @@ builder.Services.AddCors(options =>
 });
 var connectionString = builder.Configuration.GetConnectionString("Default")!;
 builder.Services.AddScoped<NpgsqlConnection>(_ => new NpgsqlConnection(connectionString));
+builder.Services.AddScoped<IMugRepository, MugRepository>();
+builder.Services.AddScoped<MugService>();
 
 var app = builder.Build();
 
@@ -33,6 +39,8 @@ app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
 app.MapGet("/hello", () => "Hello World!");
+
+app.MapMugEndpoints();
 
 app.MapGet("/people", async (NpgsqlConnection db) =>
 {
