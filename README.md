@@ -10,7 +10,7 @@ Este projeto demonstra uma API .NET simples que consulta um banco de dados Postg
    docker compose up -d
    ```
 
-   Isso iniciará um contêiner Postgres com um banco `appdb` e criará a tabela `people` automaticamente a partir do arquivo `init.sql`.
+   Isso iniciará um contêiner Postgres com um banco `appdb` e criará as tabelas `people` e `mugs` automaticamente a partir do arquivo `init.sql`.
 
 2. **Execute a API**
 
@@ -36,5 +36,5 @@ Este projeto demonstra uma API .NET simples que consulta um banco de dados Postg
 ## Estrutura
 
 - `docker-compose.yml` – define o serviço Postgres.
-- `init.sql` – script usado para criar e popular a tabela `people`.
+- `init.sql` – script usado para criar e popular as tabelas `people` e `mugs`.
 - `HelloApi/` – código da API minimalista escrita em .NET 8.
