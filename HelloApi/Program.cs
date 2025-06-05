@@ -8,12 +8,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-        policy.AllowAnyOrigin()
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("https://zany-funicular-7v9prvrrpg62x5p9-4200.app.github.dev")
+              .SetIsOriginAllowed(origin => true) // Permite qualquer origem de forma dinâmica
               .AllowAnyHeader()
-              .AllowAnyMethod());
+              .AllowAnyMethod()
+              .AllowCredentials(); // cuidado: exige origem explícita
+    });
 });
-
 var connectionString = builder.Configuration.GetConnectionString("Default")!;
 builder.Services.AddScoped<NpgsqlConnection>(_ => new NpgsqlConnection(connectionString));
 
@@ -27,7 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
+app.UseCors("AllowFrontend");
 
 app.MapGet("/hello", () => "Hello World!");
 
