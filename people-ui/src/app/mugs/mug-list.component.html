@@ -1,0 +1,47 @@
+<div class="container">
+  <h2>Inventário de Canecas</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label>Nome</label>
+      <input formControlName="name" required>
+    </div>
+    <div class="form-group">
+      <label>Descrição</label>
+      <input formControlName="description">
+    </div>
+    <div class="form-group">
+      <label>Estoque</label>
+      <input type="number" formControlName="stock" required>
+    </div>
+    <div class="buttons">
+      <button type="submit">{{ editingId === null ? 'Adicionar' : 'Salvar' }}</button>
+      <button type="button" *ngIf="editingId !== null" (click)="cancelEdit()">Cancelar</button>
+    </div>
+  </form>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+
+  <table class="mugs" *ngIf="mugs.length">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Estoque</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of mugs">
+        <td>{{ m.name }}</td>
+        <td>{{ m.description }}</td>
+        <td>{{ m.stock }}</td>
+        <td>
+          <button (click)="edit(m)">Editar</button>
+          <button (click)="delete(m.id)">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

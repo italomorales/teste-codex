@@ -1,0 +1,39 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+form {
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mugs {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mugs th, .mugs td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.error {
+  color: #a94442;
+}
+
+.success {
+  color: #2e7d32;
+}
