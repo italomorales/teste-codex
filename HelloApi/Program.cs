@@ -1,9 +1,14 @@
+using Npgsql;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("Default")!;
+builder.Services.AddScoped<NpgsqlConnection>(_ => new NpgsqlConnection(connectionString));
 
 var app = builder.Build();
 
@@ -17,6 +22,19 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapGet("/hello", () => "Hello World!");
+
+app.MapGet("/people", async (NpgsqlConnection db) =>
+{
+    await db.OpenAsync();
+    await using var cmd = new NpgsqlCommand("SELECT name FROM people", db);
+    var people = new List<string>();
+    await using var reader = await cmd.ExecuteReaderAsync();
+    while (await reader.ReadAsync())
+    {
+        people.Add(reader.GetString(0));
+    }
+    return Results.Json(people);
+});
 
 var summaries = new[]
 {
