@@ -4,4 +4,5 @@ obj/
 # optional others
 *.user
 *.vs
+db-data/
 
