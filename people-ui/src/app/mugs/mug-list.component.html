@@ -46,7 +46,23 @@
       [pagination]="true"
       [paginationPageSize]="10"
       [quickFilterText]="quickFilter"
-      (gridReady)="onGridReady($event)">
+      (gridReady)="onGridReady($event)"
+      (rowDoubleClicked)="rowDoubleClicked($event)">
     </ag-grid-angular>
   </div>
+
+  <div class="modal fade show" tabindex="-1" *ngIf="showModal" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalhes da Linha</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <pre [innerHTML]="selectedMugFormatted"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="showModal"></div>
 </div>

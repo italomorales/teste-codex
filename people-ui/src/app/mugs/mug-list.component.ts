@@ -9,7 +9,8 @@ import { MugService, Mug } from './mug.service';
   selector: 'app-mug-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, AgGridModule],
-  templateUrl: './mug-list.component.html'
+  templateUrl: './mug-list.component.html',
+  styleUrls: ['./mug-list.component.css']
 })
 export class MugListComponent implements OnInit {
   mugs: Mug[] = [];
@@ -22,6 +23,9 @@ export class MugListComponent implements OnInit {
 
   columnDefs: ColDef[] = [];
   defaultColDef: ColDef = { sortable: true, filter: true, resizable: true };
+
+  showModal = false;
+  selectedMugFormatted = '';
 
   form!: FormGroup;
 
@@ -103,6 +107,31 @@ export class MugListComponent implements OnInit {
 
   onFilterTextBoxChanged(event: Event) {
     this.quickFilter = (event.target as HTMLInputElement).value;
+  }
+
+  rowDoubleClicked(event: any) {
+    const json = JSON.stringify(event.data as Mug, null, 2);
+    this.selectedMugFormatted = this.syntaxHighlight(json);
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
+
+  private syntaxHighlight(json: string): string {
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(:)?|\b(true|false|null)\b|-?\d+(\.\d*)?([eE][+\-]?\d+)?)/g, match => {
+      let cls = 'number';
+      if (/^"/.test(match)) {
+        cls = /:$/.test(match) ? 'key' : 'string';
+      } else if (/true|false/.test(match)) {
+        cls = 'boolean';
+      } else if (/null/.test(match)) {
+        cls = 'null';
+      }
+      return '<span class="' + cls + '">' + match + '</span>';
+    });
   }
 
   delete(id: number) {
