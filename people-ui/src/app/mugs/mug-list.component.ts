@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
+import { ColDef, ICellRendererParams } from 'ag-grid-community';
 import { MugService, Mug } from './mug.service';
 
 @Component({
   selector: 'app-mug-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AgGridModule],
   templateUrl: './mug-list.component.html'
 })
 export class MugListComponent implements OnInit {
@@ -14,6 +16,9 @@ export class MugListComponent implements OnInit {
   editingId: number | null = null;
   errorMessage = '';
   successMessage = '';
+
+  columnDefs: ColDef[] = [];
+  defaultColDef: ColDef = { sortable: true, filter: true };
 
   form!: FormGroup;
 
@@ -23,6 +28,18 @@ export class MugListComponent implements OnInit {
       description: [''],
       stock: [0, Validators.required]
     });
+
+    this.columnDefs = [
+      { field: 'name', headerName: 'Nome' },
+      { field: 'description', headerName: 'Descrição' },
+      { field: 'stock', headerName: 'Estoque' },
+      {
+        headerName: 'Ações',
+        cellRenderer: (params: ICellRendererParams) => this.actionCellRenderer(params),
+        sortable: false,
+        filter: false
+      }
+    ];
   }
 
   ngOnInit(): void {
@@ -85,6 +102,18 @@ export class MugListComponent implements OnInit {
       },
       error: () => this.showError('Erro ao remover caneca.')
     });
+  }
+
+  actionCellRenderer(params: ICellRendererParams) {
+    const container = document.createElement('div');
+    container.innerHTML = `
+      <button class="btn btn-sm btn-outline-primary me-1">Editar</button>
+      <button class="btn btn-sm btn-outline-danger">Excluir</button>
+    `;
+    const [editBtn, delBtn] = Array.from(container.querySelectorAll('button')) as HTMLButtonElement[];
+    editBtn.addEventListener('click', () => this.edit(params.data as Mug));
+    delBtn.addEventListener('click', () => this.delete((params.data as Mug).id));
+    return container;
   }
 
   private showError(msg: string) {
