@@ -30,27 +30,13 @@
   <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
   <div *ngIf="successMessage" class="alert alert-success" role="alert">{{ successMessage }}</div>
 
-  <div class="table-responsive" *ngIf="mugs.length">
-    <table class="table table-bordered align-middle mb-0">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Estoque</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let m of mugs">
-          <td>{{ m.name }}</td>
-          <td>{{ m.description }}</td>
-          <td>{{ m.stock }}</td>
-          <td>
-            <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="edit(m)">Editar</button>
-            <button type="button" class="btn btn-sm btn-outline-danger" (click)="delete(m.id)">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="ag-theme-alpine" *ngIf="mugs.length">
+    <ag-grid-angular
+      class="ag-theme-alpine"
+      [columnDefs]="columnDefs"
+      [rowData]="mugs"
+      [defaultColDef]="defaultColDef"
+      domLayout="autoHeight">
+    </ag-grid-angular>
   </div>
 </div>
