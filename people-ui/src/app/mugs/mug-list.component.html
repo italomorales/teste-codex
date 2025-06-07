@@ -30,13 +30,23 @@
   <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
   <div *ngIf="successMessage" class="alert alert-success" role="alert">{{ successMessage }}</div>
 
-  <div class="ag-theme-alpine" *ngIf="mugs.length">
+  <div class="row my-3" *ngIf="mugs.length">
+    <div class="col-12 col-md-6">
+      <input type="text" class="form-control" placeholder="Buscar" (input)="onFilterTextBoxChanged($event)">
+    </div>
+  </div>
+  <div class="ag-theme-material" *ngIf="mugs.length">
     <ag-grid-angular
-      class="ag-theme-alpine"
+      class="ag-theme-material"
       [columnDefs]="columnDefs"
       [rowData]="mugs"
       [defaultColDef]="defaultColDef"
-      domLayout="autoHeight">
+      domLayout="autoHeight"
+      [rowSelection]="'single'"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [quickFilterText]="quickFilter"
+      (gridReady)="onGridReady($event)">
     </ag-grid-angular>
   </div>
 </div>
