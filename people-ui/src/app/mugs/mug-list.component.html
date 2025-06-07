@@ -1,47 +1,56 @@
-<div class="container">
-  <h2>Inventário de Canecas</h2>
+<div class="container py-4">
+  <h2 class="mb-3">Inventário de Canecas</h2>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="form-group">
-      <label>Nome</label>
-      <input formControlName="name" required>
-    </div>
-    <div class="form-group">
-      <label>Descrição</label>
-      <input formControlName="description">
-    </div>
-    <div class="form-group">
-      <label>Estoque</label>
-      <input type="number" formControlName="stock" required>
-    </div>
-    <div class="buttons">
-      <button type="submit">{{ editingId === null ? 'Adicionar' : 'Salvar' }}</button>
-      <button type="button" *ngIf="editingId !== null" (click)="cancelEdit()">Cancelar</button>
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="row g-3 align-items-end">
+      <div class="col-md-5">
+        <label for="name" class="form-label">Nome</label>
+        <input id="name" type="text" formControlName="name" class="form-control"
+          [class.is-invalid]="form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)"
+          aria-describedby="nameHelp">
+        <div class="invalid-feedback">Nome é obrigatório.</div>
+      </div>
+      <div class="col-md-5">
+        <label for="description" class="form-label">Descrição</label>
+        <input id="description" type="text" formControlName="description" class="form-control">
+      </div>
+      <div class="col-md-2">
+        <label for="stock" class="form-label">Estoque</label>
+        <input id="stock" type="number" formControlName="stock" class="form-control"
+          [class.is-invalid]="form.get('stock')?.invalid && (form.get('stock')?.touched || form.get('stock')?.dirty)">
+        <div class="invalid-feedback">Informe o estoque.</div>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary me-2">{{ editingId === null ? 'Adicionar' : 'Salvar' }}</button>
+        <button type="button" class="btn btn-secondary" *ngIf="editingId !== null" (click)="cancelEdit()">Cancelar</button>
+      </div>
     </div>
   </form>
 
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">{{ successMessage }}</div>
 
-  <table class="mugs" *ngIf="mugs.length">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Descrição</th>
-        <th>Estoque</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let m of mugs">
-        <td>{{ m.name }}</td>
-        <td>{{ m.description }}</td>
-        <td>{{ m.stock }}</td>
-        <td>
-          <button (click)="edit(m)">Editar</button>
-          <button (click)="delete(m.id)">Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive" *ngIf="mugs.length">
+    <table class="table table-bordered align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Estoque</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of mugs">
+          <td>{{ m.name }}</td>
+          <td>{{ m.description }}</td>
+          <td>{{ m.stock }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="edit(m)">Editar</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="delete(m.id)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
