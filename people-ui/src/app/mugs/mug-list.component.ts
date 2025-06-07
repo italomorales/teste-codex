@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, ICellRendererParams } from 'ag-grid-community';
+import { ColDef, ICellRendererParams, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { MugService, Mug } from './mug.service';
 
 @Component({
@@ -17,8 +17,11 @@ export class MugListComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  quickFilter = '';
+  gridApi: GridApi | null = null;
+
   columnDefs: ColDef[] = [];
-  defaultColDef: ColDef = { sortable: true, filter: true };
+  defaultColDef: ColDef = { sortable: true, filter: true, resizable: true };
 
   form!: FormGroup;
 
@@ -93,6 +96,15 @@ export class MugListComponent implements OnInit {
     this.form.reset({ name: '', description: '', stock: 0 });
   }
 
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.gridApi.sizeColumnsToFit();
+  }
+
+  onFilterTextBoxChanged(event: Event) {
+    this.quickFilter = (event.target as HTMLInputElement).value;
+  }
+
   delete(id: number) {
     if (!confirm('Deseja remover esta caneca?')) return;
     this.service.delete(id).subscribe({
@@ -107,8 +119,8 @@ export class MugListComponent implements OnInit {
   actionCellRenderer(params: ICellRendererParams) {
     const container = document.createElement('div');
     container.innerHTML = `
-      <button class="btn btn-sm btn-outline-primary me-1">Editar</button>
-      <button class="btn btn-sm btn-outline-danger">Excluir</button>
+      <button class="btn btn-sm btn-primary me-1"><i class="bi bi-pencil"></i></button>
+      <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
     `;
     const [editBtn, delBtn] = Array.from(container.querySelectorAll('button')) as HTMLButtonElement[];
     editBtn.addEventListener('click', () => this.edit(params.data as Mug));
