@@ -7,8 +7,7 @@ import { MugService, Mug } from './mug.service';
   selector: 'app-mug-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './mug-list.component.html',
-  styleUrl: './mug-list.component.css'
+  templateUrl: './mug-list.component.html'
 })
 export class MugListComponent implements OnInit {
   mugs: Mug[] = [];
